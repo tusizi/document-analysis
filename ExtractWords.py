@@ -14,6 +14,7 @@ def encode(x):
 
 
 def analysis(entity):
+    analyse.set_stop_words("stop_words.txt")
     seg_list = analyse.extract_tags(entity[1], 20, True)
     filename = "/vagrant/word/160930/" + entity[0]
     filtered_list = filter(lambda (x, y): x != "", seg_list)
