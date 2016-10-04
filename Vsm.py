@@ -1,5 +1,6 @@
 # encoding=utf-8
 
+import csv
 import json
 import math
 import types
@@ -28,11 +29,10 @@ def get_percent(item, l):
 
 def print_list(l):
     for i in l:
-        print(i.encode("utf-8"))
+        print(i)
 
 
 def vsm(entity):
-    filename = "/vagrant/vsm/data.txt"
     r = json.dumps(entity, ensure_ascii=False)
     vec_list = entity[1]
     tag_list = entity[0][1]
@@ -75,14 +75,15 @@ def vsm(entity):
         index += 1
     floor = math.sqrt(floor1) * math.sqrt(floor2)
     if floor == 0:
-        result = 0.0
+        rt = 0.0
     else:
-        result = cell / floor
-    s = '%03f' % result
-    fo = open(filename, "a+")
-    fo.write(s.encode("utf-8"))
-    fo.write("\n")
-    fo.close()
+        rt = cell / floor
+    return [rt]
+    # rw.writerow(s.encode("utf-8"))
+    # fo = open(filename, "a+")
+    # fo.write(s.encode("utf-8"))
+    # fo.write("\n")
+    # fo.close()
 
 
 def flatten(vec_list):
@@ -93,4 +94,14 @@ tagRdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: (json.loads(x)['id'
 vecRdd = sc.textFile('/vagrant/word/data.txt').map(lambda x: (json.loads(x)));
 
 rdd = tagRdd.zip(vecRdd)
-rdd.foreach(vsm)
+csvFile = file('vsm.csv', 'wb')
+writer = csv.writer(csvFile)
+writer.writerow(['percent'])
+
+result = rdd.map(vsm).collect()
+print(type(result))
+print_list(result)
+
+writer.writerows(result)
+
+csvFile.close()
