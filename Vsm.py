@@ -74,7 +74,7 @@ def vsm(entity):
         floor2 += vec_vector_list[index] * vec_vector_list[index]
         index += 1
     floor = math.sqrt(floor1) * math.sqrt(floor2)
-    if floor == 0 :
+    if floor == 0:
         result = 0.0
     else:
         result = cell / floor
