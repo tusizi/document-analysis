@@ -32,7 +32,7 @@ def print_list(l):
 
 
 def vsm(entity):
-    filename = "/vagrant/vsm/160930/svm"
+    filename = "/vagrant/vsm/data.txt"
     r = json.dumps(entity, ensure_ascii=False)
     vec_list = entity[1]
     tag_list = entity[0][1]
@@ -89,8 +89,8 @@ def flatten(vec_list):
     return [y for x in vec_list for y in x]
 
 
-tagRdd = sc.textFile('/vagrant/data/160930/*').map(lambda x: (json.loads(x)['id'], json.loads(x)['tags']));
-vecRdd = sc.textFile('/vagrant/word/160930/*').map(lambda x: (json.loads(x)));
+tagRdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: (json.loads(x)['id'], json.loads(x)['tags']));
+vecRdd = sc.textFile('/vagrant/word/data.txt').map(lambda x: (json.loads(x)));
 
 rdd = tagRdd.zip(vecRdd)
 rdd.foreach(vsm)
