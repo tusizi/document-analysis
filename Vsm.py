@@ -18,7 +18,7 @@ def add(i, l):
         l.append(i)
 
 
-def getPercent(item, l):
+def get_percent(item, l):
     for i in l:
         if item in i:
             return i[1]
@@ -55,7 +55,7 @@ def vsm(entity):
         else:
             tag_vector_list.append(0)
         if item in vec_tag_list:
-            vec_vector_list.append(getPercent(item, vec_list))
+            vec_vector_list.append(get_percent(item, vec_list))
         else:
             vec_vector_list.append(0)
 
