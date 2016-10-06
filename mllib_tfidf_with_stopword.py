@@ -25,7 +25,7 @@ def tf_me(cor):
 
     # 打印每类文本的tf-idf词语权重，第一个for遍历所有文本，第二个for便利某一类文本下的词语权重
     for i in range(len(weight)):
-        filename = "/vagrant/data/6336067112696086785.txt"
+        filename = "/vagrant/vocabulary/mllib.txt"
         for j in range(len(word)):
             r = json.dumps([word[j], weight[i][j]], ensure_ascii=False)
             fo = open(filename, "a+")
@@ -35,7 +35,7 @@ def tf_me(cor):
 
 
 sc = SparkContext(appName='DocumentsRewrite')
-rdd = sc.textFile('/vagrant/data/160930/6336067112696086785').map(lambda x: json.loads(x)['content'])
+rdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: json.loads(x)['content'])
 
 
 # corpus = rdd.map(lambda x: (jieba.cut(x, cut_all=True)))
