@@ -14,7 +14,7 @@ def encode(x):
 
 
 def cut(text):
-    seg_list = list(jieba.cut(text, cut_all=True))
+    seg_list = list(jieba.cut(text, cut_all=False))
     filtered_list = filter(lambda x: x != "", seg_list)
     string_list = filter(lambda x: lambda x: type(x) is not types.FloatType, filtered_list)
     encode_list = map(lambda x: encode(x), string_list)
@@ -31,8 +31,12 @@ def output(items):
 
 
 rdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: json.loads(x)['content'])
-stopWordRdd = sc.textFile("stop_words.txt").collect()
+stopWordRdd = sc.textFile("stop_words.txt").map(lambda x: x.encode("utf-8")).collect()
 cutWordRdd = rdd.map(cut)
 
-result = cutWordRdd.map(lambda x: filter(lambda y: y not in stopWordRdd, x))
+def filter_item(l):
+    return filter(lambda m: m not in stopWordRdd, l)
+
+
+result = cutWordRdd.map(filter_item)
 result.foreach(output)
