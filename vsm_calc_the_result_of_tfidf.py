@@ -131,7 +131,7 @@ def flatten(vec_list):
     return [y for x in vec_list for y in x]
 
 tagRdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: (json.loads(x)['id'], json.loads(x)['tags']))
-vecRdd = sc.textFile('/vagrant/word/data.txt').map(lambda x: (json.loads(x)))
+vecRdd = sc.textFile('/vagrant/result/jieba_tfidf_20.txt').map(lambda x: (json.loads(x)))
 
 rdd = tagRdd.zip(vecRdd)
 csvFile = file('vsm.csv', 'wb')

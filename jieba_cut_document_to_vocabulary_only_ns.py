@@ -1,5 +1,5 @@
 # encoding=utf-8
-
+# 使用结巴去停用词 并且去掉副词和代词
 import json
 
 import jieba.posseg as pseg

@@ -1,5 +1,5 @@
 # encoding=utf-8
-
+# 使用结巴去停用词并且分词
 import json
 import types
 
@@ -22,7 +22,7 @@ def cut(text):
 
 
 def output(items):
-    filename = "/vagrant/vocabulary/data.txt"
+    filename = "/vagrant/result/jieba_cut_word.txt"
     join = " ".join(items)
     fo = open(filename, "a+")
     fo.write(join)
