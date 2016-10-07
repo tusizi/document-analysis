@@ -3,17 +3,21 @@ from __future__ import print_function
 
 import json
 import operator
+import tempfile
 
 from pyspark import SparkContext
 from pyspark.mllib.feature import Word2Vec
+from pyspark.mllib.feature import Word2VecModel
 
 sc = SparkContext(appName='Word2Vec')
 
 vocabularyRdd = sc.textFile('/vagrant/vocabulary/data.txt').map(lambda row: row.split(" "))
-ldaRdd = sc.textFile('/vagrant/word/data.txt')
+ldaRdd = sc.textFile('/vagrant/word/data.txt').map(json.loads)
 
 word2vec = Word2Vec()
 model = word2vec.fit(vocabularyRdd)
+path = tempfile.mkdtemp()
+model.save(sc, path)
 
 
 def output(value):
@@ -29,15 +33,18 @@ def get_synonyms(lda_list):
     word_dict = {}
     for item in lda_list:
         word_dict[item[0]] = item[1]
-        synonyms = model.findSynonyms(item[0], 20)
-        for s_item in synonyms:
-            if word_dict.has_keys(s_item[0]):
-                word_dict[s_item[0]] = word_dict[s_item[0]] + item[1] * s_item[1]
+        same_model = Word2VecModel.load(sc, path)
+        synonyms = same_model.findSynonyms(item[0], 20)
+        for word, cosine_distance in synonyms:
+            print("{}: {}".format(word.encode("utf-8"), cosine_distance))
+            if word_dict.has_key(word):
+                word_dict[word] = word_dict[word] + item[1] * cosine_distance
             else:
-                word_dict[s_item[0]] = item[1] * s_item[1]
+                word_dict[word] = item[1] * cosine_distance
     sorted_dict = sorted(word_dict.items(), key=operator.itemgetter(1), reverse=True)
-    return sorted_dict
+    output(sorted_dict)
 
 
-ldaRdd.map(get_synonyms).foreach(output)
+map(lambda x: get_synonyms(x), ldaRdd.collect())
+
 sc.stop()
