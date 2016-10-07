@@ -63,6 +63,14 @@ sc = SparkContext(appName='DocumentAnalysis')
             //计算结果并输出
             Output cell/(sqrt floor1 + sqrt floor2)
         }
+        //话题里面每一个词的内容和权重的类
+        class Vocabulary {
+            具体的词汇名字
+            name
+
+            当前词在topic中的权重值
+            percent
+        }
 """
 
 def add(i, l):
