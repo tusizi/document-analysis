@@ -1,5 +1,5 @@
 # encoding=utf-8
-# 使用结巴抽取文章的标题和内容两个里面的分词
+# 使用结巴抽取文章的标题和内容两个里面的分词,这个也是用于处理多个文章的，另一种思路输出内容给LDA
 import json
 import types
 
@@ -15,7 +15,7 @@ def encode(x):
 
 def analysis(entity):
     analyse.set_stop_words("stop_words.txt")
-    content_list = analyse.extract_tags(entity[1] + entity[0], 100, False)
+    content_list = analyse.extract_tags(entity[1] + entity[0], 500, False)
     filtered_list = filter(lambda x: x != "", content_list)
     string_list = filter(lambda x: lambda x: type(x) is not types.FloatType, filtered_list)
     encode_list = map(lambda x: encode(x), string_list)

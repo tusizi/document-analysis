@@ -1,5 +1,5 @@
 # encoding=utf-8
-# 使用结巴去停用词 并且去掉副词和代词
+# 使用结巴去停用词 并且按照给定的列表获取词性，用来处理所有文章用的，输出来的结果是给JAVA的LDA程序使用
 import json
 
 import jieba.posseg as pseg
@@ -14,13 +14,15 @@ def encode(x):
 
 def cut(text):
     seg_list = list(pseg.cut(text))
-    filtered_list = filter(lambda (word, flag): flag != "x" and flag != "d", seg_list)
+    al = ["n", "nr", "nr1", "nr2", "nrj", "nrf", "ns", "nsf", "nt", "nz", "nl", "ng", "s", "f", "v", "vd", "vn", "vf",
+          "vx", "vi", "vl", "vga", "ad", "an", "ag", "al"]
+    filtered_list = filter(lambda (word, flag): flag in al, seg_list)
     encode_list = map(lambda (x, y): encode(x), filtered_list)
     return encode_list;
 
 
 def output(items):
-    filename = "/vagrant/vocabulary/pseg.txt"
+    filename = "/vagrant/vocabulary/mominal.txt"
     join = " ".join(items)
     fo = open(filename, "a+")
     fo.write(join)
@@ -28,7 +30,8 @@ def output(items):
     fo.close()
 
 
-rdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: json.loads(x)['content'])
+src_file = '/vagrant/data/data.txt'
+rdd = sc.textFile(src_file).map(lambda x: json.loads(x)['content'])
 stopWordRdd = sc.textFile("stop_words.txt").map(lambda x: x.encode("utf-8")).collect()
 cutWordRdd = rdd.map(cut)
 

@@ -1,5 +1,5 @@
 # coding: utf-8
-
+# 使用gensim写的lda，但是没有可以使用的分词结果
 import gensim
 
 from gensim import corpora

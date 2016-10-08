@@ -1,5 +1,5 @@
 # encoding=utf-8
-# 使用结巴去停用词并且分词
+# 使用结巴去停用词并且分词，可以对每一个文章使用，比如你只想看一个文章，可以修改这个文章的src_file路径
 import json
 import types
 
@@ -30,9 +30,11 @@ def output(items):
     fo.close()
 
 
-rdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: json.loads(x)['content'])
+src_file = '/vagrant/data/data.txt'
+rdd = sc.textFile(src_file).map(lambda x: json.loads(x)['content'])
 stopWordRdd = sc.textFile("stop_words.txt").map(lambda x: x.encode("utf-8")).collect()
 cutWordRdd = rdd.map(cut)
+
 
 def filter_item(l):
     return filter(lambda m: m not in stopWordRdd, l)

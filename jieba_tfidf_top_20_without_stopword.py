@@ -1,4 +1,5 @@
 # encoding=utf-8
+# 使用结巴获取tfidf的前20个词,这个可以对每个文章处理，直接修改src_file就可以了
 
 import json
 import types
@@ -27,5 +28,6 @@ def analysis(entity):
     fo.close()
 
 
-rdd = sc.textFile('/vagrant/data/data.txt').map(lambda x: (json.loads(x)['id'], json.loads(x)['content']));
+src_file = '/vagrant/data/data.txt'
+rdd = sc.textFile(src_file).map(lambda x: (json.loads(x)['id'], json.loads(x)['content']));
 rdd.foreach(analysis)
